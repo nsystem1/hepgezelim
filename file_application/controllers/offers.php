@@ -52,11 +52,13 @@ class Offers extends CI_Controller {
           $range             = $this->security->xss_clean( $this->input->get('range') );               // get GET[] data from URL
           
           // if origin value is not set, redirect user to search page 
-          if( strcmp($originStatus, "1") != 0 || strcmp($origin, "") == 0  || strcmp($lat, "") == 0  || strcmp($lng, "") == 0  || !isset($lat) || !isset($lng) || $lat <= 0 || $lng <= 0 )              // check origin point is set
-                redirect("ara-seyahat");                                                  
+          //if( strcmp($originStatus, "1") != 0 || strcmp($origin, "") == 0  || strcmp($lat, "") == 0  || strcmp($lng, "") == 0  || !isset($lat) || !isset($lng) || $lat <= 0 || $lng <= 0 )              // check origin point is set
+		  if( strcmp($originStatus, "1") != 0 || strcmp($origin, "") == 0  || strcmp($lat, "") == 0  || strcmp($lng, "") == 0  || !isset($lat) || !isset($lng) || $lat == "" || $lng == "" )              // check origin point is set
+                redirect("find-trip");                                                  
           // check destination data is set
                   
-          if( strcmp($destinationStatus,"1") != 0 || strcmp($destination, "") == 0 || $dLat <= 0  || $dLng <= 0 ){   
+          //if( strcmp($destinationStatus,"1") != 0 || strcmp($destination, "") == 0 || $dLat <= 0  || $dLng <= 0 ){
+		  if( strcmp($destinationStatus,"1") != 0 || strcmp($destination, "") == 0 || $dLat == ""  || $dLng == "" ){   
              $destination = "";
 		         $destinationStatus = 0;
              $dLat = -1;
@@ -121,9 +123,9 @@ class Offers extends CI_Controller {
          
           $query= "origin=$place1&lat=$lat&lng=$lng&destination=$place2&dLat=$dLat&dLng=$dLng&originStatus=$originStatus&destinationStatus=$destinationStatus&range=$range";    
           if( strcmp(lang('lang'), "tr") == 0 )
-                redirect("ara-seyahat-sonuc?$query");
+                redirect("trip-result?$query");
           else
-                redirect("search-travel-result?$query");
+                redirect("search-result?$query");
      }
 
     /**
@@ -161,7 +163,7 @@ class Offers extends CI_Controller {
                                          'place2'            =>"",
                                          'range'             =>""     ); 
                   $this->session->unset_userdata($searchData);
-                  redirect("ara-seyahat");
+                  redirect("find-trip");
                }
                $origin            = $this->session->userdata('place1'            );   // get GET[] data from URL  
                $lat               = $this->session->userdata('lat'               );   // get GET[] data from URL  
@@ -174,10 +176,12 @@ class Offers extends CI_Controller {
           }
          
           // if origin value is not set, redirect user to search page 
-          if( strcmp($originStatus, "1") != 0 || strcmp($origin, "") == 0  || strcmp($lat, "") == 0  || strcmp($lng, "") == 0  || !isset($lat) || !isset($lng) || $lat <= 0 || $lng <= 0 )              // check origin point is set
-                redirect("ara-seyahat");                                                 
+          //if( strcmp($originStatus, "1") != 0 || strcmp($origin, "") == 0  || strcmp($lat, "") == 0  || strcmp($lng, "") == 0  || !isset($lat) || !isset($lng) || $lat <= 0 || $lng <= 0 )              // check origin point is set
+		  if( strcmp($originStatus, "1") != 0 || strcmp($origin, "") == 0  || strcmp($lat, "") == 0  || strcmp($lng, "") == 0  || !isset($lat) || !isset($lng) || $lat == "" || $lng == "" )              // check origin point is set
+                redirect("find-trip");                                                 
           // check destination data is set      
-          if( strcmp($destinationStatus,"1") != 0 || strcmp($destination, "") == 0 || $dLat <= 0  || $dLng <= 0 ){    
+          //if( strcmp($destinationStatus,"1") != 0 || strcmp($destination, "") == 0 || $dLat <= 0  || $dLng <= 0 ){
+		  if( strcmp($destinationStatus,"1") != 0 || strcmp($destination, "") == 0 || $dLat == ""  || $dLng == "" ){    
              $destination = "";
 		         $destinationStatus = 0;
              $dLat = -1;
@@ -365,7 +369,7 @@ class Offers extends CI_Controller {
                               $offer['origin']            = $offer['destination'];
                               $offer['destination']       = $temp;
 							                // change map direction
-							                $temp                    = $offer['originMap'];
+							  $temp                    = $offer['originMap'];
                               $offer['originMap']      = $offer['destinationMap'];
                               $offer['destinationMap'] = $temp;
 									            $temp                       = $offer['departure_date'];
@@ -612,7 +616,7 @@ class Offers extends CI_Controller {
                               $car['foto_name']    = photoCheckCar($car);                                          // check photo car is exist 
                               
                               if( !$data['own_offer']  ){                                                          // if offer does not belong to logined user 
-                                       $link  = strcmp(lang('lang'), "tr") == 0 ? "detay-" : "detail-";
+                                       $link  = strcmp(lang('lang'), "tr") == 0 ? "trip-detail-" : "detail-";
 							                         $link  .= $url_title;                                                       // if offer does not belong to logined user 
                                 
                                        $this->look_at->add(  array(  'ride_offer_id' => $offer_id, 
